@@ -47,10 +47,14 @@ def bye(bot, update):
     ).format(name=update.message.left_chat_member.full_name)
     update.message.reply_text(text)
 
-def echo(bot, update):
-    """Echo the user message."""
-    update.message.reply_text(update.message.text)
+def cry(bot, update):
+    bot.send_photo(chat_id = update.message.chat_id,
+                   photo = open('imgs/jonas_chorando.jpg', 'rb'),
+                   caption = "aa!")
 
+def consideration(bot, update):
+    bot.send_audio(chat_id = update.message.chat_id,
+                   audio = open('audios/consideracao.mp3', 'rb'))
 
 def error(bot, update, error):
     """Log Errors caused by Updates."""
@@ -65,18 +69,18 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
-    # on different commands - answer in Telegram
+    # lista de comandos
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("ajuda", help))
+    dp.add_handler(CommandHandler("chora", cry))
+    dp.add_handler(CommandHandler("consideracao", consideration))
+
     dp.add_handler(MessageHandler(
         Filters.status_update.new_chat_members, welcome
     ))
     dp.add_handler(MessageHandler(
         Filters.status_update.left_chat_member, bye
     ))
-
-    # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text, echo))
 
     # log all errors
     dp.add_error_handler(error)
