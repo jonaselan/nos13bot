@@ -1,18 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Simple Bot to reply to Telegram messages.
-This program is dedicated to the public domain under the CC0 license.
-This Bot uses the Updater class to handle the bot.
-First, a few handler functions are defined. Then, those functions are passed to
-the Dispatcher and registered at their respective places.
-Then, the bot is started and runs until we press Ctrl-C on the command line.
-Usage:
-Basic Echobot example, repeats messages.
-Press Ctrl-C on the command line or send a signal to the process to stop the
-bot.
-"""
-
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import os
@@ -53,8 +41,21 @@ def cry(bot, update):
                    caption = "aa!")
 
 def consideration(bot, update):
-    bot.send_audio(chat_id = update.message.chat_id,
-                   audio = open('audios/consideracao.mp3', 'rb'))
+    bot.send_voice(chat_id = update.message.chat_id,
+                   voice = open('audios/consideracao.mp3', 'rb'),
+                   duration = 8)
+
+def marijuana(bot, update):
+    bot.send_voice(chat_id = update.message.chat_id,
+                   voice = open('audios/maconha.mp3', 'rb'))   
+
+def dont_know(bot, update):
+    bot.send_voice(chat_id = update.message.chat_id,
+                   voice = open('audios/sabia_nao.mp3', 'rb'))   
+
+def blz(bot, update):
+    bot.send_voice(chat_id = update.message.chat_id,
+                   voice = open('audios/blz.mp3', 'rb'))   
 
 def error(bot, update, error):
     """Log Errors caused by Updates."""
@@ -73,6 +74,10 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("ajuda", help))
     dp.add_handler(CommandHandler("chora", cry))
+    dp.add_handler(CommandHandler("maconha", marijuana))
+    dp.add_handler(CommandHandler("blz", blz))
+    dp.add_handler(CommandHandler("sabia_nao", dont_know))
+    dp.add_handler(CommandHandler("chora", cry))
     dp.add_handler(CommandHandler("consideracao", consideration))
 
     dp.add_handler(MessageHandler(
@@ -81,16 +86,11 @@ def main():
     dp.add_handler(MessageHandler(
         Filters.status_update.left_chat_member, bye
     ))
-
-    # log all errors
+    
     dp.add_error_handler(error)
-
-    # Start the Bot
+    
     updater.start_polling()
-
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
+    
     updater.idle()
 
 
